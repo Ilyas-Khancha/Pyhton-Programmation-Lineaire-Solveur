@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LP Solver — Linear Programming Calculator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+
+<!-- ═══════════════════════════════ HEADER ═══════════════════════════════ -->
+<header class="app-header">
+  <div class="header-inner">
+    <div class="brand">
+      <span class="brand-icon">∑</span>
+      <div>
+        <h1 class="brand-name">LP Solver</h1>
+        <p class="brand-sub">Linear Programming Calculator</p>
+      </div>
+    </div>
+    <nav class="header-actions">
+      <button class="btn btn-ghost" id="btn-random" title="Load a random problem">⚄ Random</button>
+      <button class="btn btn-ghost" id="btn-reset" title="Reset form">↺ Reset</button>
+    </nav>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════ MAIN ════════════════════════════════ -->
+<main class="app-main">
+
+  <!-- ── LEFT PANEL: Configuration ── -->
+  <section class="panel panel-config">
+    <h2 class="panel-title">Problem Setup</h2>
+
+    <!-- Method + Direction row -->
+    <div class="config-row">
+      <div class="field-group">
+        <label class="field-label">Method</label>
+        <div class="seg-control" id="method-seg">
+          <button class="seg-btn active" data-val="simplex">Simplex</button>
+          <button class="seg-btn" data-val="graphical">Graphical</button>
+        </div>
+        <p class="field-hint graphical-note" id="graphical-hint" style="display:none">
+          ⚠ Graphical method requires exactly 2 variables.
+        </p>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Optimise</label>
+        <div class="seg-control" id="direction-seg">
+          <button class="seg-btn active" data-val="max">Maximise</button>
+          <button class="seg-btn" data-val="min">Minimise</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Variables + Constraints -->
+    <div class="config-row">
+      <div class="field-group">
+        <label class="field-label" for="num-vars">Variables</label>
+        <div class="stepper">
+          <button class="step-btn" data-target="num-vars" data-delta="-1">−</button>
+          <input type="number" id="num-vars" class="step-input" value="2" min="2" max="8" />
+          <button class="step-btn" data-target="num-vars" data-delta="1">+</button>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="num-cons">Constraints</label>
+        <div class="stepper">
+          <button class="step-btn" data-target="num-cons" data-delta="-1">−</button>
+          <input type="number" id="num-cons" class="step-input" value="3" min="1" max="10" />
+          <button class="step-btn" data-target="num-cons" data-delta="1">+</button>
+        </div>
+      </div>
+      <button class="btn btn-primary" id="btn-generate">Generate Form ↓</button>
+    </div>
+
+    <!-- ── Dynamic LP Form (populated by JS) ── -->
+    <div id="lp-form" class="lp-form" style="display:none">
+
+      <!-- Objective function -->
+      <div class="form-section">
+        <div class="section-header">
+          <span class="section-badge">Objective</span>
+          <span class="section-eq" id="obj-label">Max Z =</span>
+        </div>
+        <div class="eq-row" id="obj-row">
+          <!-- filled by JS -->
+        </div>
+      </div>
+
+      <!-- Constraints -->
+      <div class="form-section">
+        <div class="section-header">
+          <span class="section-badge">Constraints</span>
+        </div>
+        <div id="constraints-container">
+          <!-- filled by JS -->
+        </div>
+      </div>
+
+      <!-- Options -->
+      <div class="form-section options-section">
+        <div class="section-header">
+          <span class="section-badge">Options</span>
+        </div>
+        <div id="nonneg-checkboxes" class="nonneg-row">
+          <!-- filled by JS -->
+        </div>
+      </div>
+
+      <!-- Solve button -->
+      <button class="btn btn-solve" id="btn-solve">
+        <span class="solve-icon">▶</span> Solve
+      </button>
+    </div>
+  </section>
+
+  <!-- ── RIGHT PANEL: Results ── -->
+  <section class="panel panel-results" id="results-panel">
+    <div class="results-placeholder" id="results-placeholder">
+      <div class="placeholder-icon">⚙</div>
+      <p>Configure your LP problem on the left and click <strong>Solve</strong> to see the solution here.</p>
+    </div>
+    <div id="results-content" style="display:none"></div>
+  </section>
+
+</main>
+
+<!-- ═══════════════════════════════ LOADER ══════════════════════════════ -->
+<div class="loader-overlay" id="loader" style="display:none">
+  <div class="loader-box">
+    <div class="spinner"></div>
+    <p>Solving…</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ DATA ════════════════════════════════ -->
+<script>
+  window.__DEFAULT_EXAMPLE__ = {{ default_example | safe }};
+  window.__EXAMPLES__ = {{ examples | safe }};
+</script>
+<script src="/static/js/app.js"></script>
+</body>
+</html>
